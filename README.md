@@ -1,0 +1,2 @@
+# HOG-SVM
+HPG+SVM for MNIST
