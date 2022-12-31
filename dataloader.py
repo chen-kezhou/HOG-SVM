@@ -32,9 +32,3 @@ def load_data(data_folder):
         imgpath.read(), np.uint8, offset=16).reshape(len(y_test), 28, 28)
 
   return (x_train, y_train), (x_test, y_test)
-
-# (train_images, train_labels), (test_images, test_labels) = load_data('./dataset/')
-# (60000, 28, 28)
-# (60000,)
-# (10000, 28, 28)
-# (10000,)

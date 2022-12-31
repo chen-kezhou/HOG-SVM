@@ -11,37 +11,33 @@ def get_HOG_feature(trainX, testX):
 # HOG parameters:
     winSize = (imsize, imsize) # 28, 28
     blockSize = (imsize//2, imsize//2) # 14, 14    
-    cellSize = (imsize//2, imsize//2) #14, 14
+    cellSize = (imsize//4, imsize//4) #14, 14
     blockStride = (imsize//4, imsize//4) # 7, 7
     nbins = 9
-    signedGradients = True
-    derivAperture = 1
-    winSigma = -1.0
-    histogramNormType = 0
-    L2HysThreshold = 0.2
-    gammaCorrection = 1
-    nlevels = 64
+    signedGradients = True  # 梯度是有符号的。这里与默认值相反。其他与默认值都相同。
+    derivAperture = 1  # 
+    winSigma = -1.0  # 不使用高斯滤波器平滑图像
+    histogramNormType = 0  # 不使用归一化方法
+    L2HysThreshold = 0.2  # HOG 特征规范化方式 L2-Hys 的阈值参数。此处不起作用。
+    gammaCorrection = 1  # 伽马校正
+    nlevels = 64  
 
     # define the HOG descriptor
     hog = cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins, derivAperture, winSigma, 
                             histogramNormType, L2HysThreshold, gammaCorrection, nlevels, signedGradients)
 
     # compute HOG descriptors
-    train_descriptors = []
+    HOG_train = []
     for i in range(trainX.shape[0]):
-        # trainX[i] = deskew(trainX[i], 28) # deskew the current image
         descriptor = hog.compute(trainX[i]) # compute the HOG features
-        train_descriptors.append(descriptor) # append it to the train decriptors list
+        HOG_train.append(descriptor) # append it to the train decriptors list
 
-    test_descriptors = []
+    HOG_test = []
     for i in range(testX.shape[0]):
-        # testX[i] = deskew(testX[i], 28) # deskew the current image
         descriptor = hog.compute(testX[i]) # compute the HOG features
-        test_descriptors.append(descriptor) # append it to the test descriptors list
+        HOG_test.append(descriptor) # append it to the test descriptors list
 
-    #train_descriptors = np.array(train_descriptors)
-    train_descriptors = np.resize(train_descriptors, (trainX.shape[0], 81))
+    HOG_train = np.reshape(HOG_train, (trainX.shape[0], -1))  # 324维的数据
 
-    #test_descriptors = np.array(test_descriptors)
-    test_descriptors = np.resize(test_descriptors, (testX.shape[0], 81))
-    return train_descriptors, test_descriptors
+    HOG_test = np.reshape(HOG_test, (testX.shape[0], -1))
+    return HOG_train, HOG_test
